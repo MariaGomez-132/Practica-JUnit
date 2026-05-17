@@ -1,0 +1,5 @@
+com\ejemplo\gestortareas\servicio\TareaService.class
+com\ejemplo\gestortareas\modelo\Tarea.class
+com\ejemplo\gestortareas\Main.class
+com\ejemplo\gestortareas\dao\TareaDAO.class
+com\ejemplo\gestortareas\database\DatabaseConnection.class

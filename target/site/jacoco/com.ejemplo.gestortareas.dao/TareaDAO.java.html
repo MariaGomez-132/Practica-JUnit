@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TareaDAO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Gestor de Tareas</a> &gt; <a href="index.source.html" class="el_package">com.ejemplo.gestortareas.dao</a> &gt; <span class="el_source">TareaDAO.java</span></div><h1>TareaDAO.java</h1><pre class="source lang-java linenums">package com.ejemplo.gestortareas.dao;
+
+import com.ejemplo.gestortareas.database.DatabaseConnection;
+import com.ejemplo.gestortareas.modelo.Tarea;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+<span class="fc" id="L11">public class TareaDAO {</span>
+
+    public Tarea guardar(Tarea tarea) {
+<span class="fc" id="L14">        String sql = &quot;INSERT INTO tareas (titulo, descripcion, completada, fecha_creacion) VALUES (?, ?, ?, ?)&quot;;</span>
+        
+<span class="fc" id="L16">        try (Connection conn = DatabaseConnection.getConnection();</span>
+<span class="fc" id="L17">             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {</span>
+            
+<span class="fc" id="L19">            pstmt.setString(1, tarea.getTitulo());</span>
+<span class="fc" id="L20">            pstmt.setString(2, tarea.getDescripcion());</span>
+<span class="pc bpc" id="L21" title="1 of 2 branches missed.">            pstmt.setInt(3, tarea.isCompletada() ? 1 : 0);</span>
+<span class="fc" id="L22">            pstmt.setTimestamp(4, Timestamp.valueOf(tarea.getFechaCreacion()));</span>
+            
+<span class="fc" id="L24">            pstmt.executeUpdate();</span>
+            
+<span class="fc" id="L26">            ResultSet rs = pstmt.getGeneratedKeys();</span>
+<span class="pc bpc" id="L27" title="1 of 2 branches missed.">            if (rs.next()) {</span>
+<span class="fc" id="L28">                tarea.setId(rs.getLong(1));</span>
+            }
+<span class="fc" id="L30">            rs.close();</span>
+            
+<span class="fc" id="L32">            return tarea;</span>
+<span class="fc" id="L33">        } catch (SQLException e) {</span>
+<span class="fc" id="L34">            System.err.println(&quot;Error al guardar la tarea: &quot; + e.getMessage());</span>
+<span class="fc" id="L35">            return null;</span>
+        }
+    }
+
+    public List&lt;Tarea&gt; obtenerTodas() {
+<span class="nc" id="L40">        List&lt;Tarea&gt; tareas = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L41">        String sql = &quot;SELECT * FROM tareas ORDER BY fecha_creacion DESC&quot;;</span>
+        
+<span class="nc" id="L43">        try (Connection conn = DatabaseConnection.getConnection();</span>
+<span class="nc" id="L44">             Statement stmt = conn.createStatement();</span>
+<span class="nc" id="L45">             ResultSet rs = stmt.executeQuery(sql)) {</span>
+            
+<span class="nc bnc" id="L47" title="All 2 branches missed.">            while (rs.next()) {</span>
+<span class="nc" id="L48">                tareas.add(mapearResultSet(rs));</span>
+            }
+<span class="nc" id="L50">        } catch (SQLException e) {</span>
+<span class="nc" id="L51">            System.err.println(&quot;Error al obtener tareas: &quot; + e.getMessage());</span>
+<span class="nc" id="L52">        }</span>
+        
+<span class="nc" id="L54">        return tareas;</span>
+    }
+
+    public Optional&lt;Tarea&gt; obtenerPorId(Long id) {
+<span class="fc" id="L58">        String sql = &quot;SELECT * FROM tareas WHERE id = ?&quot;;</span>
+        
+<span class="fc" id="L60">        try (Connection conn = DatabaseConnection.getConnection();</span>
+<span class="fc" id="L61">             PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+            
+<span class="fc" id="L63">            pstmt.setLong(1, id);</span>
+<span class="fc" id="L64">            ResultSet rs = pstmt.executeQuery();</span>
+            
+<span class="fc bfc" id="L66" title="All 2 branches covered.">            if (rs.next()) {</span>
+<span class="fc" id="L67">                return Optional.of(mapearResultSet(rs));</span>
+            }
+<span class="fc" id="L69">            rs.close();</span>
+<span class="pc bpc" id="L70" title="2 of 4 branches missed.">        } catch (SQLException e) {</span>
+<span class="nc" id="L71">            System.err.println(&quot;Error al obtener tarea: &quot; + e.getMessage());</span>
+<span class="fc" id="L72">        }</span>
+        
+<span class="fc" id="L74">        return Optional.empty();</span>
+    }
+
+    public boolean actualizar(Tarea tarea) {
+<span class="fc" id="L78">        String sql = &quot;UPDATE tareas SET titulo = ?, descripcion = ?, completada = ?, fecha_completada = ? WHERE id = ?&quot;;</span>
+        
+<span class="fc" id="L80">        try (Connection conn = DatabaseConnection.getConnection();</span>
+<span class="fc" id="L81">             PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+            
+<span class="fc" id="L83">            pstmt.setString(1, tarea.getTitulo());</span>
+<span class="fc" id="L84">            pstmt.setString(2, tarea.getDescripcion());</span>
+<span class="pc bpc" id="L85" title="1 of 2 branches missed.">            pstmt.setInt(3, tarea.isCompletada() ? 1 : 0);</span>
+<span class="pc bpc" id="L86" title="1 of 2 branches missed.">            if (tarea.getFechaCompletada() != null) {</span>
+<span class="fc" id="L87">                pstmt.setTimestamp(4, Timestamp.valueOf(tarea.getFechaCompletada()));</span>
+            } else {
+<span class="nc" id="L89">                pstmt.setNull(4, Types.TIMESTAMP);</span>
+            }
+<span class="fc" id="L91">            pstmt.setLong(5, tarea.getId());</span>
+            
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">            return pstmt.executeUpdate() &gt; 0;</span>
+<span class="nc" id="L94">        } catch (SQLException e) {</span>
+<span class="nc" id="L95">            System.err.println(&quot;Error al actualizar tarea: &quot; + e.getMessage());</span>
+<span class="nc" id="L96">            return false;</span>
+        }
+    }
+
+    public boolean eliminar(Long id) {
+<span class="nc" id="L101">        String sql = &quot;DELETE FROM tareas WHERE id = ?&quot;;</span>
+        
+<span class="nc" id="L103">        try (Connection conn = DatabaseConnection.getConnection();</span>
+<span class="nc" id="L104">             PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+            
+<span class="nc" id="L106">            pstmt.setLong(1, id);</span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">            return pstmt.executeUpdate() &gt; 0;</span>
+<span class="nc" id="L108">        } catch (SQLException e) {</span>
+<span class="nc" id="L109">            System.err.println(&quot;Error al eliminar tarea: &quot; + e.getMessage());</span>
+<span class="nc" id="L110">            return false;</span>
+        }
+    }
+
+    public List&lt;Tarea&gt; obtenerPendientes() {
+<span class="nc" id="L115">        List&lt;Tarea&gt; tareas = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L116">        String sql = &quot;SELECT * FROM tareas WHERE completada = 0 ORDER BY fecha_creacion DESC&quot;;</span>
+        
+<span class="nc" id="L118">        try (Connection conn = DatabaseConnection.getConnection();</span>
+<span class="nc" id="L119">             Statement stmt = conn.createStatement();</span>
+<span class="nc" id="L120">             ResultSet rs = stmt.executeQuery(sql)) {</span>
+            
+<span class="nc bnc" id="L122" title="All 2 branches missed.">            while (rs.next()) {</span>
+<span class="nc" id="L123">                tareas.add(mapearResultSet(rs));</span>
+            }
+<span class="nc" id="L125">        } catch (SQLException e) {</span>
+<span class="nc" id="L126">            System.err.println(&quot;Error al obtener tareas pendientes: &quot; + e.getMessage());</span>
+<span class="nc" id="L127">        }</span>
+        
+<span class="nc" id="L129">        return tareas;</span>
+    }
+
+    private Tarea mapearResultSet(ResultSet rs) throws SQLException {
+<span class="fc" id="L133">        Tarea tarea = new Tarea();</span>
+<span class="fc" id="L134">        tarea.setId(rs.getLong(&quot;id&quot;));</span>
+<span class="fc" id="L135">        tarea.setTitulo(rs.getString(&quot;titulo&quot;));</span>
+<span class="fc" id="L136">        tarea.setDescripcion(rs.getString(&quot;descripcion&quot;));</span>
+<span class="fc bfc" id="L137" title="All 2 branches covered.">        tarea.setCompletada(rs.getInt(&quot;completada&quot;) == 1);</span>
+<span class="fc" id="L138">        tarea.setFechaCreacion(rs.getTimestamp(&quot;fecha_creacion&quot;).toLocalDateTime());</span>
+<span class="fc" id="L139">        Timestamp fechaCompletada = rs.getTimestamp(&quot;fecha_completada&quot;);</span>
+<span class="fc bfc" id="L140" title="All 2 branches covered.">        if (fechaCompletada != null) {</span>
+<span class="fc" id="L141">            tarea.setFechaCompletada(fechaCompletada.toLocalDateTime());</span>
+        }
+<span class="fc" id="L143">        return tarea;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

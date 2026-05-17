@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Tarea.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Gestor de Tareas</a> &gt; <a href="index.source.html" class="el_package">com.ejemplo.gestortareas.modelo</a> &gt; <span class="el_source">Tarea.java</span></div><h1>Tarea.java</h1><pre class="source lang-java linenums">package com.ejemplo.gestortareas.modelo;
+
+import java.time.LocalDateTime;
+
+public class Tarea {
+    private Long id;
+    private String titulo;
+    private String descripcion;
+    private boolean completada;
+    private LocalDateTime fechaCreacion;
+    private LocalDateTime fechaCompletada;
+
+<span class="fc" id="L13">    public Tarea() {</span>
+<span class="fc" id="L14">        this.fechaCreacion = LocalDateTime.now();</span>
+<span class="fc" id="L15">        this.completada = false;</span>
+<span class="fc" id="L16">    }</span>
+
+    public Tarea(String titulo, String descripcion) {
+<span class="fc" id="L19">        this();</span>
+<span class="fc" id="L20">        this.titulo = titulo;</span>
+<span class="fc" id="L21">        this.descripcion = descripcion;</span>
+<span class="fc" id="L22">    }</span>
+
+    public Long getId() {
+<span class="fc" id="L25">        return id;</span>
+    }
+
+    public void setId(Long id) {
+<span class="fc" id="L29">        this.id = id;</span>
+<span class="fc" id="L30">    }</span>
+
+    public String getTitulo() {
+<span class="fc" id="L33">        return titulo;</span>
+    }
+
+    public void setTitulo(String titulo) {
+<span class="fc" id="L37">        this.titulo = titulo;</span>
+<span class="fc" id="L38">    }</span>
+
+    public String getDescripcion() {
+<span class="fc" id="L41">        return descripcion;</span>
+    }
+
+    public void setDescripcion(String descripcion) {
+<span class="fc" id="L45">        this.descripcion = descripcion;</span>
+<span class="fc" id="L46">    }</span>
+
+    public boolean isCompletada() {
+<span class="fc" id="L49">        return completada;</span>
+    }
+
+    public void setCompletada(boolean completada) {
+<span class="fc" id="L53">        this.completada = completada;</span>
+<span class="pc bpc" id="L54" title="1 of 4 branches missed.">        if (completada &amp;&amp; this.fechaCompletada == null) {</span>
+<span class="fc" id="L55">            this.fechaCompletada = LocalDateTime.now();</span>
+        }
+<span class="fc" id="L57">    }</span>
+
+    public LocalDateTime getFechaCreacion() {
+<span class="fc" id="L60">        return fechaCreacion;</span>
+    }
+
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+<span class="fc" id="L64">        this.fechaCreacion = fechaCreacion;</span>
+<span class="fc" id="L65">    }</span>
+
+    public LocalDateTime getFechaCompletada() {
+<span class="fc" id="L68">        return fechaCompletada;</span>
+    }
+
+    public void setFechaCompletada(LocalDateTime fechaCompletada) {
+<span class="fc" id="L72">        this.fechaCompletada = fechaCompletada;</span>
+<span class="fc" id="L73">    }</span>
+
+    @Override
+    public String toString() {
+<span class="nc bnc" id="L77" title="All 2 branches missed.">        String estado = completada ? &quot;[✓]&quot; : &quot;[ ]&quot;;</span>
+<span class="nc" id="L78">        return String.format(&quot;%s ID: %d | %s | %s&quot;, </span>
+            estado, id, titulo, 
+<span class="nc bnc" id="L80" title="All 2 branches missed.">            completada ? &quot;Completada&quot; : &quot;Pendiente&quot;);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

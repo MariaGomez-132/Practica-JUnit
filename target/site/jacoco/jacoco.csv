@@ -1,0 +1,6 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+Gestor de Tareas,com.ejemplo.gestortareas.dao,TareaDAO,120,201,13,13,35,48,13,8,3,5
+Gestor de Tareas,com.ejemplo.gestortareas.modelo,Tarea,35,68,5,3,3,28,4,15,1,14
+Gestor de Tareas,com.ejemplo.gestortareas,Main,461,0,45,0,149,0,36,0,10,0
+Gestor de Tareas,com.ejemplo.gestortareas.servicio,TareaService,55,63,8,8,12,14,8,8,4,4
+Gestor de Tareas,com.ejemplo.gestortareas.database,DatabaseConnection,26,38,3,5,10,16,4,5,1,4
